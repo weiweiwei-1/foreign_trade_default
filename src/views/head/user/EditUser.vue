@@ -55,12 +55,7 @@
     export default {
         name: "EditUser",
         props: {
-            /*showUserStatus: {
-                type: Boolean,
-                required: true,
-                default: false
-            },
-*/
+
             user: {
                 type: Object,
                 required: true,
@@ -82,9 +77,6 @@
             const editText = ref("编辑");
             //初始化新对象为父组件传递过来的值
             let newUser = toRefs(props.user);
-            console.log("name");
-            // console.log(newUser.company);
-            console.log(newUser);
             //用户信息
             const userInfo = reactive ({
                 photo: props.user.photo,

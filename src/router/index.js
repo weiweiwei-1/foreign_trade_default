@@ -61,11 +61,15 @@ const routes = [
             }
         ]
     },
+
+    //好友路由
     {
         path: '/fa/friend',
         name: 'Friend',
         component: Friend,
     },
+
+    //建议路由
     {
         path: '/fa/suggestion',
         name: 'Suggestion',

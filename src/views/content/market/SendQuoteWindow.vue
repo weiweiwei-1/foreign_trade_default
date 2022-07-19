@@ -49,7 +49,7 @@
                                         <option v-for="item in shippingWayList" :value="item">{{item}}</option>
                                     </select>
                                 </li>
-                                <li><span class="quote-key">运费(元)</span><span class="mark">：</span><span class="red-mark">*</span><input v-model="price" id="shipping-cost-text" type="text" @change="inputChange"></li>
+                                <li><span class="quote-key">运费(元)</span><span class="mark">：</span><span class="red-mark">*</span><input type="number" v-model="price" id="shipping-cost-text" @input="inputChange"></li>
                                 <li><span class="quote-key">排仓时间</span><span class="mark">：</span><span class="red-mark">*</span>
                                     <select v-model="arrangeTime" @change="inputChange">
                                         <option value="">选择天数</option>
@@ -62,7 +62,7 @@
                                         <option v-for="item in deliverTimeList" :value="item">{{item}}</option>
                                     </select>
                                 </li>
-                                <li><span class="quote-key">备注</span><span class="mark">：</span><span class="red-mark"> </span><textarea id="mark-text" v-model="reMark" @change="inputChange"/></li>
+                                <li><span class="quote-key">备注</span><span class="mark">：</span><span class="red-mark"> </span><textarea id="mark-text" v-model="reMark" @input="inputChange"/></li>
                             </ul>
                         </div>
                         <div id="send-quote">
@@ -198,7 +198,7 @@
                                 break;
                             case 0:
                                 res.error.priceError !== null ? textInvalid(shippingCostTarget) : textValid(shippingCostTarget);
-                                res.error.reMarkError !== null ? textInvalid(markTarget) : textInvalid(markTarget);
+                                res.error.reMarkError !== null ? textInvalid(markTarget) : textValid(markTarget);
                                 break;
                             case 1:
                                 alert("报价成功");

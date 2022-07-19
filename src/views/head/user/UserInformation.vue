@@ -36,44 +36,45 @@
             const showUserStatus = ref(false);
             const showType = ref("");
             const user = ref({});
-            //每次刷新页面，都从后台请求，更新用户登录状态
+            //每次刷新页面，从后台请求用户角色信息，更新用户登录状态
             onMounted(() => {
                 getLoginStatus().then(res => {
                 })
             });
 
-            //显示登录逻辑
+            //显示登录
             const showLogin = () => {
                 return store.state.loginCode === -1000 || store.state.loginCode === 1000 && store.state.loginRole === "fts"
             };
 
-            //点击登录按钮状态切换
+            //点击切换到登录页面
             const login = () => {
                 showLoginStatus.value = true;
                 showType.value = "login";
             };
 
-            //点击注册按钮状态切换
+            //点击切换到注册页面
             const register = () => {
                 showLoginStatus.value = true;
                 showType.value = "register";
             };
 
-            //子组件传值关闭弹窗
+            //关闭登录弹窗
             const closeWindow = () => {
                 showLoginStatus.value = false;
             };
 
+            //关闭用户编辑弹窗
             const closeUserWindow = () => {
                 showUserStatus.value = false;
             };
 
-            //子组件传值改变显示状态
+            //子组件传值切换登录注册页面，该逻辑以UserInformation组件为主组件
             const changeShowType = (data) => {
                 showType.value = data;
             };
 
-            //显示用户名逻辑
+            //显示用户名
             const showUser = (loginCode, loginRole) => {
                 return store.state.loginCode === loginCode && store.state.loginRole === loginRole
             };
@@ -93,13 +94,10 @@
                         }).catch(err => {
                             alert(err);
                         })
-                    } else {
-
                     }
                 }).catch(err => {
-
+                    alert(err)
                 });
-
             };
 
             //打开外贸页面
