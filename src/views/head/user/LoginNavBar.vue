@@ -2,27 +2,14 @@
     <div id="nav-bar">
         <div id="register">
             注册
-            <!--<router-link to="/fa/register">
-                <slot name="register">
-                </slot>
-            </router-link>-->
         </div>
         <div id="login">
             登录
-            <!--<router-link to="/fa/login">
-                <slot name="login">
-                </slot>
-            </router-link>-->
         </div>
         <div id="forget-password">
             忘记密码
-            <!--<router-link to="/fa/forget-password">
-                <slot name="forget-password">
-                </slot>
-            </router-link>-->
         </div>
     </div>
-    <!--<router-view></router-view>-->
 </template>
 
 <script>

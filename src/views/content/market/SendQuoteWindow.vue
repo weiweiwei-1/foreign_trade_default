@@ -3,18 +3,18 @@
         <div id="send-quote-center">
             <div id="product-info">
                 <div id="product-image">
-                    <img :src="image" alt="" @click="showWindow">
+                    <img :src="$productImageUrl + curProductInfo.photo" alt="" @click="showWindow">
                 </div>
                 <div id="main-info">
                     <div id="item-main-info">
                         <div class="item-weight">{{curProductInfo.weight}}kg</div>
                         <div class="item-status">
                             <span v-if="curProductInfo.realOrder === '是'">实单</span>
-                            <span v-else>非实单</span>
+                            <span v-else style="color: #333">非实单</span>
                         </div>
                         <div class="item-charge-status">
-                            <span v-if="curProductInfo.charger === '是'">带电</span>
-                            <span v-else>不带电</span>
+                            <span v-if="curProductInfo.charger === '是'" >带电</span>
+                            <span v-else style="color: rgb(224, 46, 36)">不带电</span>
                         </div>
                     </div>
                     <div id="item-launch-info">
@@ -30,7 +30,7 @@
                 <div id="detail-info">
                     <ul>
                         <li><span class="product-key">体积</span><span class="mark">:</span><span class="value">{{curProductInfo.volumn}}</span></li>
-                        <li><span class="product-key">证书</span><span class="mark">:</span><span class="value">{{curProductInfo.certificate}}</span></li>
+                        <li><span class="product-key">证书</span><span class="mark">:</span><span class="value" v-if="curProductInfo.certificate === '1'" style="color: rgb(224, 46, 36)">有</span><span v-else>无</span></li>
                         <li><span class="product-key">邮编</span><span class="mark">:</span><span class="value">{{curProductInfo.postcode}}</span></li>
                         <li><span class="product-key">    </span><span class="mark"> </span><span class="value">         </span></li>
                         <li class="long-info"><span class="product-key">详细地址</span><span class="mark">:</span><span class="value" id="detail-address">{{curProductInfo.destination}}</span></li>
@@ -75,7 +75,7 @@
     </div>
     <div id="image-view" v-show="imageShowStatus" @click="closeImageWindow">
         <div>
-            <img :src="image" alt="" id="image">
+            <img :src="$productImageUrl + curProductInfo.photo" alt="" id="image">
         </div>
     </div>
 </template>
@@ -113,8 +113,6 @@
             });
             //图片预览窗口显示状态
             const imageShowStatus = ref(false);
-            //图片路径
-            const image = ref(require("@/assets/images/friend.png"));
             //运输方式可选列表
             const shippingWayList = ref(["海运", "空运", "陆运"]);
             //排仓时间可选列表
@@ -221,7 +219,6 @@
             return {
                 curProductInfo,
                 ...toRefs(quoteInfo),
-                image,
                 imageShowStatus,
                 shippingWayList,
                 arrangeTimeList,
@@ -481,6 +478,7 @@
     #product-image img {
         width: 130px;
         height: 130px;
+        cursor: pointer;
     }
 
     .divide-line {

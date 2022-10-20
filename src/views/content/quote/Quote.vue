@@ -1,26 +1,26 @@
 <template>
-    <div id="quote-content">
+    <div id="quote">
         <quote-list></quote-list>
-        <quote-detail-content></quote-detail-content>
+        <quote-content-default></quote-content-default>
     </div>
 </template>
 
 <script>
     import QuoteList from 'views/content/quote/QuoteList.vue'
-    import QuoteDetailContent from 'views/content/quote/QuoteDetailDefault.vue'
+    import QuoteContentDefault from 'views/content/quote/QuoteContentDefault.vue'
     export default {
         name: "Quote",
         components: {
-            QuoteDetailContent,
+            QuoteContentDefault,
             QuoteList
         }
     }
 </script>
 
 <style scoped>
-    #quote-content {
+    #quote {
         display: flex;
-        width: 990px;
+        width: 1000px;
         height: 530px;
     }
 </style>

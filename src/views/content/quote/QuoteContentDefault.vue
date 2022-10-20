@@ -12,8 +12,9 @@
 
 <style scoped>
     #quote-detail-default {
-        width: 740px;
-        height: 100%;
-        background: navajowhite;
+        width: 748px;
+        height: 528px;
+        background: white;
+        border: 0.5px solid #e6e5e6;
     }
 </style>

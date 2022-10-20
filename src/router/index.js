@@ -6,8 +6,8 @@ const Friend = () => import('views/content/friend/Friend.vue');
 const Suggestion = () => import('views/content/suggestions/Suggestion.vue');
 const MessageContent = () => import('views/content/message/MessageContent.vue');
 const BlankContent = () => import('views/content/message/BlankContent.vue');
-const QuoteDetail = () => import('views/content/quote/QuoteDetail.vue');
-const QuoteDetailDefault = () => import('views/content/quote/QuoteDetailDefault.vue');
+const QuoteContent = () => import('views/content/quote/QuoteContent.vue');
+const QuoteContentDefault = () => import('views/content/quote/QuoteContentDefault.vue');
 
 const routes = [
     //主路由
@@ -52,12 +52,12 @@ const routes = [
         children: [
             {
                 path: '',
-                component: QuoteDetailDefault
+                component: QuoteContentDefault
             },
 
             {
                 path: ':productId',
-                component: QuoteDetail
+                component: QuoteContent
             }
         ]
     },

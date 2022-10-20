@@ -4,7 +4,7 @@
             <ul id="market">
                 <li class="item" v-for="(item,index) in productList" @click="openQuoteWindow(index, item)">
                     <a class="item-a" target="_self" href="#">
-                        <img class="item-img" src="@/assets/images/message.png" alt="">
+                        <img class="item-img" :src="$productImageUrl + item.photo" alt="">
                         <div class="item-title">
                             {{item.productName}}
                         </div>
@@ -12,11 +12,17 @@
                             <div class="item-weight">
                                 {{item.weight}}kg
                             </div>
-                            <div class="item-status">
-                                {{item.realOrder}}
+                            <div v-if="item.realOrder === '1'" class="item-status">
+                                 实单
                             </div>
-                            <div class="item-charge-status">
-                                {{item.charger}}
+                            <div v-else class="item-status" style="color: #9C9C9C">
+                                非实单
+                            </div>
+                            <div v-if="item.charger === '1'" class="item-charge-status">
+                                带电
+                            </div>
+                            <div v-else class="item-charge-status" style="color: rgb(224, 46, 36)">
+                                不带电
                             </div>
                         </div>
                         <div class="item-launch-info">
@@ -123,7 +129,7 @@
 
             let bscroll = reactive({});
 
-            onMounted(()=>{
+            onMounted(() => {
                 getHomeProductList(param).then(res => {
                     switch (res.code) {
                         case 1:
@@ -163,6 +169,7 @@
 
             });
 
+            //删除list中的元素，则页面实时取消显示index对应的内容
             const deleteProduct = (index) => {
                 console.log(index);
                 productList.value.splice(index, 1);
@@ -195,7 +202,7 @@
         left: 5px;
         height: 100%;
         width: 1000px;
-        font-size: 0;
+        /*font-size: 0;*/
         font-family: 'helvetica neue',tahoma,'hiragino sans gb',stheiti,'wenquanyi micro hei',sans-serif;
         border-top: 1px solid #f2f2f2;
         border-left: 1px solid #f2f2f2;

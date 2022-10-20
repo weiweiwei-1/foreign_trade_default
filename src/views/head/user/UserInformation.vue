@@ -6,7 +6,7 @@
         <div id="auth-user" v-if="showUser(1000, 'fa')" @click="showUserDetail">
             {{$store.state.userName}}
         </div>
-        <div id="login-register-trigger" v-if="showLogin()">
+        <div id="login-register-trigger" v-else><!--v-if="showLogin()"-->
             <div @click="login" id="login">登录</div>|
             <div @click="register" id="register">注册</div>
         </div>
@@ -119,7 +119,6 @@
                 closeWindow,
                 closeUserWindow,
                 showUser,
-                showLogin,
                 showUserDetail,
                 swapFtsIdentity
             }

@@ -108,7 +108,7 @@
 
     #login-block {
         position: absolute;
-        z-index: 1001;
+        z-index: 1005;
         display: -webkit-box;
         width: 100%;
         height: 100%;
@@ -126,6 +126,10 @@
         align-items: center;
         justify-content: center;
         background: rgba(0,0,0,0.4);
+    }
+
+    #nav-bar div {
+        cursor: pointer;
     }
 
     #login-center {

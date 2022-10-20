@@ -3,21 +3,22 @@
         <div class="content">
             <div id="quote-list">
                 <slot name="quote-list" v-for="item in quoteList">
-                    <router-link :to="'/fa/quote/' + item.id">
-                        <div class="quote-item">
+                    <router-link tag="div" :to="'/fa/quote/' + item.id">
+                        <div class="quote-item" :class="{active:showActive(item.id)}" @click="activeTrigger(item.id)">
                             <div class="img-block">
-                                <img src="" alt="">
+                                <img :src="$productImageUrl + item.photo" alt="">
                             </div>
                             <div class="product-detail">
-                                <div class="product-title">标题</div>
+                                <div class="product-title">{{item.productName}}</div>
                                 <div class="product-main-info">
-                                    <div class="deliver-country">美国->中国</div>
-                                    <div class="product-weight">100kg</div>
+                                    <div class="deliver-country">{{item.origin}}->{{item.destinationCountry}}</div>
+                                    <div class="product-weight">{{item.weight}}kg</div>
                                 </div>
                             </div>
                             <div class="time-block">
-                                <div class="send-time">2022-06-08</div>
-                                <div class="price">实单</div>
+                                <div class="send-time">{{ $filters.dateFormat(item.sendTime, "YYYY-MM-DD") }}</div>
+                                <div class="price" v-if="item.realOrder === '1'">实单</div>
+                                <div class="price" v-else>非实单</div>
                             </div>
                         </div>
                     </router-link>
@@ -39,6 +40,13 @@
         setup() {
             const quoteList = ref([]);
             let bscroll = reactive({});
+            const activeId = ref('');
+            const activeTrigger = (id) => {
+                activeId.value = id;
+            };
+            const showActive = (id) => {
+                return activeId.value === id;
+            };
             onMounted(()=>{
                 getQuoteList().then(res => {
                     switch (res.code) {
@@ -72,6 +80,8 @@
             });
 
             return {
+                activeTrigger,
+                showActive,
                 quoteList,
             }
         }
@@ -83,6 +93,16 @@
         width: 250px;
         height: 530px;
         overflow: hidden;
+        z-index: 1003;
+        background: rgb(300, 300, 300);;
+    }
+
+    .content {
+        width: 250px;
+    }
+
+    .active {
+        background: rgb(220, 220, 220);
     }
 
     #quote-list {
@@ -90,10 +110,12 @@
         display: block;
         top: 0;
         left: 0;
+        /*z-index: 1001;*/
         overflow: hidden;
         width: 250px;
         height: 100%;
-        background: rgb(255,255,255);
+        background: rgb(245,245,245);
+
     }
 
     .quote-item {
@@ -101,9 +123,9 @@
         align-items: center;
         flex-direction: row;
         width: 100%;
-        height: 60px;
+        height: 65px;
         cursor: pointer;
-        border: 1px solid deepskyblue;
+        /*border: 1px solid deepskyblue;*/
     }
 
     .img-block {

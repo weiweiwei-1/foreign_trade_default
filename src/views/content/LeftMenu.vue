@@ -32,6 +32,7 @@
         justify-content: space-around;
         align-items: center;
         position: relative;
+        z-index: 1003;
         float: left;
         width: 100px;
         height: 530px;

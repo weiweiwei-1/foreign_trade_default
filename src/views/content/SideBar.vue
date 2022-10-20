@@ -13,6 +13,7 @@
 <style scoped>
     #sidebar {
         position: relative;
+        z-index: 1003;
         float: left;
         width: 266px;
         height: 530px;

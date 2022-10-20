@@ -49,9 +49,8 @@
 </template>
 
 <script>
-    import {reactive, toRefs, ref} from 'vue';
+    import { reactive, toRefs, ref, getCurrentInstance } from 'vue';
     import {editUser, getUserInfo, logout, resumeUnLogin} from "network/user-fa";
-
     export default {
         name: "EditUser",
         props: {
@@ -64,7 +63,8 @@
         },
 
         setup(props, context) {
-            let imageUrl = "http://localhost:8080/fa-image/" + props.user.photo;
+            const { proxy } = getCurrentInstance();
+            let imageUrl = proxy.$faImageUrl + props.user.photo;
             //用户图像url
             const image = ref(imageUrl);
             //预览图片状态
@@ -140,7 +140,6 @@
             //关闭预览窗口
             const closeFlowImg = (e) => {
                 const image = document.querySelector("#img-preview");
-                console.log(image);
                 if (image && !image.contains(e.target)) {
                     flowImgStatus.value = false
                 }
@@ -316,7 +315,7 @@
 <style scoped>
     #user-block {
         position: absolute;
-        z-index: 1001;
+        z-index: 1005;
         display: -webkit-box;
         width: 100%;
         height: 100%;
@@ -505,8 +504,8 @@
         align-items: center;
         width: 100%;
         height: 100%;
-        z-index: 1003;
-        background: rgba(0,0,0,0.4);;
+        z-index: 1007;
+        background: rgba(0,0,0,0.4);
     }
 
     #flow-img img {
