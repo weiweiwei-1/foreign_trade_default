@@ -36,7 +36,7 @@
 </template>
 
 <script>
-    import { ref, watch, onMounted } from 'vue'
+    import { ref, onMounted } from 'vue'
     import { useRouter, useRoute } from 'vue-router'
     import { getQuoteDetail, getMyQuote } from "network/quote"
     import { ElMessage } from 'element-plus'

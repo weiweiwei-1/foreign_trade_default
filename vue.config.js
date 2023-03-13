@@ -13,7 +13,8 @@ module.exports = {
                 'network': '@/network',
                 'utils': '@/utils',
                 'views': '@/views',
-                'store': '@/store'
+                'store': '@/store',
+                'config': '@/config',
             }
         }
     }

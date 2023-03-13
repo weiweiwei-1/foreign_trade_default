@@ -1,7 +1,5 @@
 <template>
     <div id="user">
-        <!--<router-link to="/fts">
-            <div id="fts-identity-info">货代登录请点击这里！</div></router-link>-->
         <div id="identity-info" @click="swapFtsIdentity">外贸业务员登录请求点击这里！</div>
         <div id="auth-user" v-if="showUser(1000, 'fa')" @click="showUserDetail">
             {{$store.state.userName}}

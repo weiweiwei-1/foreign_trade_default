@@ -1,11 +1,12 @@
 <template>
     <div id="quote">
-        <quote-list></quote-list>
-        <quote-content-default></quote-content-default>
+        <quote-list @changeId="changeId"></quote-list>
+        <quote-content-default :productId="productId" @resetUnreadMsgCount="resetUnreadMsgCount"></quote-content-default>
     </div>
 </template>
 
 <script>
+    import { ref } from "vue"
     import QuoteList from 'views/content/quote/QuoteList.vue'
     import QuoteContentDefault from 'views/content/quote/QuoteContentDefault.vue'
     export default {
@@ -13,6 +14,24 @@
         components: {
             QuoteContentDefault,
             QuoteList
+        },
+        setup(props, context) {
+            const productId = ref(null);
+            const resetMsgId = ref(null);
+            const changeId = (id) => {
+                console.log('id为：' + id);
+                productId.value = id
+            }
+
+            const resetUnreadMsgCount = (senderId) => {
+                resetMsgId.value = senderId
+            }
+
+            return {
+                changeId,
+                productId,
+                resetUnreadMsgCount
+            }
         }
     }
 </script>

@@ -4,11 +4,6 @@ const Message = () => import('views/content/message/Message.vue');
 const Quote = () => import('views/content/quote/Quote.vue');
 const Friend = () => import('views/content/friend/Friend.vue');
 const Suggestion = () => import('views/content/suggestions/Suggestion.vue');
-const MessageContent = () => import('views/content/message/MessageContent.vue');
-const BlankContent = () => import('views/content/message/BlankContent.vue');
-const QuoteContent = () => import('views/content/quote/QuoteContent.vue');
-const QuoteContentDefault = () => import('views/content/quote/QuoteContentDefault.vue');
-
 const routes = [
     //主路由
     {
@@ -31,17 +26,6 @@ const routes = [
         path: '/fa/message',
         name: 'Messsage',
         component: Message,
-        children: [
-            {
-                path: '',
-                component: BlankContent
-            },
-            {
-                path: ':ftsid',
-                component: MessageContent
-            }
-
-        ]
     },
 
     //报价路由
@@ -49,17 +33,6 @@ const routes = [
         path: '/fa/quote',
         name: 'Quote',
         component: Quote,
-        children: [
-            {
-                path: '',
-                component: QuoteContentDefault
-            },
-
-            {
-                path: ':productId',
-                component: QuoteContent
-            }
-        ]
     },
 
     //好友路由

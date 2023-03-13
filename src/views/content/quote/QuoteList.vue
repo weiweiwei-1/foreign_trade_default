@@ -3,25 +3,23 @@
         <div class="content">
             <div id="quote-list">
                 <slot name="quote-list" v-for="item in quoteList">
-                    <router-link tag="div" :to="'/fa/quote/' + item.id">
-                        <div class="quote-item" :class="{active:showActive(item.id)}" @click="activeTrigger(item.id)">
-                            <div class="img-block">
-                                <img :src="$productImageUrl + item.photo" alt="">
-                            </div>
-                            <div class="product-detail">
-                                <div class="product-title">{{item.productName}}</div>
-                                <div class="product-main-info">
-                                    <div class="deliver-country">{{item.origin}}->{{item.destinationCountry}}</div>
-                                    <div class="product-weight">{{item.weight}}kg</div>
-                                </div>
-                            </div>
-                            <div class="time-block">
-                                <div class="send-time">{{ $filters.dateFormat(item.sendTime, "YYYY-MM-DD") }}</div>
-                                <div class="price" v-if="item.realOrder === '1'">实单</div>
-                                <div class="price" v-else>非实单</div>
+                    <div class="quote-item" @click="changeId(item.id)" :class="{active:showActive(item.id)}">
+                        <div class="img-block">
+                            <img :src="$productImageUrl + item.photo" alt="">
+                        </div>
+                        <div class="product-detail">
+                            <div class="product-title">{{item.productName}}</div>
+                            <div class="product-main-info">
+                                <div class="deliver-country">{{item.origin}}->{{item.destinationCountry}}</div>
+                                <div class="product-weight">{{item.weight}}kg</div>
                             </div>
                         </div>
-                    </router-link>
+                        <div class="time-block">
+                            <div class="send-time">{{ $filters.dateFormat(item.sendTime, "YYYY-MM-DD") }}</div>
+                            <div class="price" v-if="item.realOrder === '1'">实单</div>
+                            <div class="price" v-else>非实单</div>
+                        </div>
+                    </div>
                 </slot>
             </div>
         </div>
@@ -37,13 +35,14 @@
     import {getQuoteList} from "network/quote"
     export default {
         name: "QuoteList",
-        setup() {
+        setup(props, context) {
             const quoteList = ref([]);
             let bscroll = reactive({});
-            const activeId = ref('');
-            const activeTrigger = (id) => {
+            const activeId = ref(null);
+            const changeId = (id) => {
+                context.emit('changeId', id);
                 activeId.value = id;
-            };
+            }
             const showActive = (id) => {
                 return activeId.value === id;
             };
@@ -80,7 +79,7 @@
             });
 
             return {
-                activeTrigger,
+                changeId,
                 showActive,
                 quoteList,
             }
@@ -94,7 +93,8 @@
         height: 530px;
         overflow: hidden;
         z-index: 1003;
-        background: rgb(300, 300, 300);;
+        background: rgb(300, 300, 300);
+        border: 1px solid rgb(220, 220, 220);
     }
 
     .content {

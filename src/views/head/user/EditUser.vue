@@ -35,7 +35,7 @@
                     </ul>
                 </div>
                 <div id="edit-block">
-                    <div id="block-content"><button @click="edit">{{editText}}</button><button @click="saveUserInfo" :disabled="disable">保存</button><button>修改密码</button><button @click="logout1">注销</button></div>
+                    <div id="block-content"><button @click="edit">{{editText}}</button><button @click="saveUserInfo" :disabled="disable">保存</button><button>修改密码</button><button @click="logoutAction">注销</button></div>
                 </div>
             </div>
         </div>
@@ -189,7 +189,7 @@
                 }
             };
 
-            //输入框编辑状态，边框显示，可编辑，取消边框显示，只读状态
+            //输入框编辑状态，边框显示表示可编辑; 取消边框显示表示只读状态
             const edit = () => {
                 if (editText.value === '编辑') {
                     editShow()
@@ -245,7 +245,7 @@
                         case 1:
                             editHide();
                             getUserInfo().then(res => {
-                                //从后台请求最新用户数据，更新到页面上
+                                //后台请求最新用户数据，更新到页面上
                                 newUser = toRefs(res.data);
                                 imageUrl = "http://localhost:8080/fa-image/" + res.data.photo;
                             }).catch(err => {
@@ -278,7 +278,7 @@
             };
 
             //注销
-            const logout1 = () => {
+            const logoutAction = () => {
                 logout().then(res => {
                     switch (res.code) {
                         case -1: alert("系统错误"); break;
@@ -305,7 +305,7 @@
                 edit,
                 warnCancel,
                 saveUserInfo,
-                logout1
+                logoutAction
             }
         }
 

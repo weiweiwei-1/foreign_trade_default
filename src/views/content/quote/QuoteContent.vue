@@ -6,7 +6,6 @@
             <fts-info :ftsInfoShowStatus="ftsInfoShowStatus" @closeFtsInfoShow="closeFtsInfoShow" :productId="productId"></fts-info>
             <chat-detail :productId="productId"></chat-detail>
         </div>
-        <!--显示内容为：{{$route.params.productId}}-->
     </div>
 </template>
 <script>
@@ -48,8 +47,6 @@
             //检测到路由传值改变，新productId赋给旧productId
             function routerChange(data) {
                 if (productId !== data) {
-                    /*console.log("data改变，值为" + data);
-                    console.log("productId当前值为：" + productId.value);*/
                     productId.value = data
                 }
             }

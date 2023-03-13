@@ -17,6 +17,7 @@ app.config.globalProperties.$faImageUrl = "http://localhost:8080/fa-image/";
 app.config.globalProperties.$ftsImageUrl = "http://localhost:8080/fts-image/";
 app.config.globalProperties.$productImageUrl = "http://localhost:8080/product-image/";
 app.config.globalProperties.$productVerifyImageUrl = "http://localhost:8080/product-verify-image/";
+app.config.globalProperties.$wsUrl = "ws://localhost:8080/websocket/socketServer";
 app.use(store).use(router).use(ElementPlus, { size: 'small', zIndex: 3000 }).mount('#app');
 app.config.globalProperties.$filters = {
     dateFormat(value, format) {
