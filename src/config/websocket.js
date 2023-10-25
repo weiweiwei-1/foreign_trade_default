@@ -1,2 +1,6 @@
-export const webSocketUrl = 'ws://localhost:8080/websocket/socketServer'
-
+export default {
+    ws: {},
+    setWs: function(newWs){
+        this.ws = newWs
+    }
+}

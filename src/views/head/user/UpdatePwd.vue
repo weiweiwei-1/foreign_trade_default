@@ -10,14 +10,13 @@
 </template>
 
 <script>
-import {updatePwd} from 'network/fts-user'
-import {textInvalid, textValid} from '@/config/common'
-import {ref} from "vue";
-import {ElMessage} from 'element-plus'
+import {updatePwd} from 'network/user-fa'
+import {textInvalid, textValid, messageShow} from '@/config/common'
+import {ref} from "vue"
 
 export default {
-  name: "FtsUpdatePwd",
-  
+  name: "UpdatePwd",
+
   setup(props, context) {
     const originPwd = ref('')
     const newPwd = ref('')
@@ -26,9 +25,9 @@ export default {
     const newErr = ref(false)
     const confirmErr = ref(false)
     const closeWindow = (e) => {
-      const center = document.querySelector(".pwd-center");
+      const center = document.querySelector(".pwd-center")
       if (center && !center.contains(e.target)) {
-        context.emit('closePwdWin');
+        context.emit('closePwdWin')
       }
     }
 
@@ -77,33 +76,20 @@ export default {
           switch (res) {
             case -2:
               textInvalid(originTarget)
-                ElMessage.info({
-                  message: '原密码错误',
-                  duration: 1000
-                })
-                  break
+              messageShow('info', '原密码错误', 1000)
+              break
             case 0:
               textInvalid(newTarget)
-              ElMessage.info({
-                message: '密码格式不符',
-                duration: 1000
-              })
-                  break
+              messageShow('info', '密码格式不符', 1000)
+              break
             case 1:
-              ElMessage.success({
-                message: '密码修改成功',
-                duration: 1000
-              })
-                context.emit('closePwdWin')
-                  break
+              messageShow('success', '密码修改成功', 1000)
+              context.emit('closePwdWin')
+              break
             case -1:
-              ElMessage.error({
-                message: '后台错误，联系管理员',
-                duration: 1000
-              })
+              messageShow('error', '后台错误，联系管理员', 1000)
+              break
           }
-        }).catch(err => {
-          console.log(err)
         })
       }
     }
@@ -124,7 +110,8 @@ export default {
 
 <style scoped>
 .pwd-block {
-  position: fixed;
+  /*position: fixed;*/
+  position: absolute;
   width: 100%;
   height: 100%;
   z-index: 1009;
@@ -133,7 +120,7 @@ export default {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba(0,0,0,0.4);
+  background: rgba(0, 0, 0, 0.4);
 }
 
 .pwd-center {
@@ -164,9 +151,9 @@ button {
   border: transparent;
   border-radius: 5px;
   font-size: 15px;
-  font-family: '微软雅黑',"宋体","Arial Narrow",Helvetica,sans-serif;
+  font-family: '微软雅黑', "宋体", "Arial Narrow", Helvetica, sans-serif;
   cursor: pointer;
   color: white;
-  background-color: rgb(91, 192, 222);
+  background-color: rgb(255, 57, 24);
 }
 </style>

@@ -1,11 +1,17 @@
 import {request} from "./request";
-import qs from 'qs';
 
 export function getMsgListByPid(params) {
     return request({
         url: '/fa/message/list/pid/get',
         method: 'get',
         params
+    })
+}
+
+export function getUnReadMsgCount() {
+    return request({
+        url: '/fa/message/count',
+        method: 'get'
     })
 }
 

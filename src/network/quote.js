@@ -16,6 +16,14 @@ export function getQuoteList() {
     })
 }
 
+export function getQuoteListByFtsId(params) {
+    return request({
+        url: '/fa/quote/list/ftsid',
+        method: 'get',
+        params
+    })
+}
+
 export function getQuoteDetail(params) {
     return request({
         url: '/fa/quote/detail',
@@ -29,5 +37,12 @@ export function getMyQuote(params) {
         url: '/fa/quote/sent',
         method: 'get',
         params
+    })
+}
+
+export function getQuoteCount() {
+    return request({
+        url: '/fa/quote/count',
+        method: 'get'
     })
 }

@@ -1,5 +1,5 @@
-import {request} from "./request";
-import qs from 'qs';
+import {request} from "./request"
+import qs from 'qs'
 import store from '@/store'
 
 //注册
@@ -42,7 +42,6 @@ export function editUser(userInfo) {
         method: "post",
         data: userInfo,
         contentType: "multipart/form-data",
-        // processData: false,
     })
 }
 
@@ -54,9 +53,18 @@ export function logout() {
     })
 }
 
+//修改密码
+export function updatePwd(params) {
+    return request({
+        url: '/fa/user/pwd/update',
+        method: 'post',
+        params
+    })
+}
+
 //恢复未登录状态，将相关字段的值置为默认值
 export function resumeUnLogin() {
-    store.commit('changeCode', -1000);
-    store.commit('changeRole', "");
-    store.commit('changeName', "邂逅");
+    store.commit('changeCode', -1000)
+    store.commit('changeRole', "")
+    store.commit('changeName', "邂逅")
 }

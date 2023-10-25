@@ -4,7 +4,24 @@ export default createStore({
     state: {
         loginCode: -1000,
         loginRole: "",
-        userName: "邂逅"
+        userName: "邂逅",
+        onlineStatus: false,
+        totalUnReadMsgCount: 0,
+        newFriendCount: 0,
+        quoteCount: -2,
+        websocket: null,
+        // 连接状态，1为已连上，0为正在连接，-1为完全断开，不再重连
+        connectStatus: -1,
+        // 默认重连次数
+        defaultReconnectTimes: 180,
+        // 最大重连次数，15min内不断重连，若一直失败，则放弃重连，若重连成功，则重置重连次数为90, 30min内不断重连，则重连次数为180
+        maxReconnectTimes: 180,
+        // 恢复重连的标志
+        reconnectCircleMark: true,
+        // 消息列表组件状态
+        msgListComStatus: false,
+        // 消息详情组件状态
+        msgDetailComStatus: false,
     },
     mutations: {
         changeName (state, name) {
@@ -15,7 +32,37 @@ export default createStore({
         },
         changeCode (state, code) {
             state.loginCode = code
-        }
+        },
+        changeOnlineStatus(state, status) {
+            state.onlineStatus = status
+        },
+        changeTotalUnReadMsgCount(state, count) {
+            state.totalUnReadMsgCount = count
+        },
+        changeNewFriendCount(state, count) {
+            state.newFriendCount = count
+        },
+        changeQuoteCount(state, count) {
+            state.quoteCount = count
+        },
+        setWebSocket(state, val) {
+            state.websocket = val
+        },
+        changeConnectStatus(state, val) {
+            state.connectStatus = val
+        },
+        changeMaxReconnectTimes(state, val) {
+            state.maxReconnectTimes = val
+        },
+        changeReconnectCircleMark(state, val) {
+            state.reconnectCircleMark = val
+        },
+        changeMsgListComStatus(state, val) {
+            state.msgListComStatus = val
+        },
+        changeMsgDetailComStatus(state, val) {
+            state.msgDetailComStatus = val
+        },
     },
     actions: {
     },

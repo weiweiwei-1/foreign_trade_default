@@ -17,42 +17,43 @@ const routes = [
         component: Market,
     },
     {
-        path: '/fa/market',
+        path: '/market',
         name: 'Market',
         component: Market,
     },
     //消息路由
     {
-        path: '/fa/message',
-        name: 'Messsage',
+        path: '/message',
+        name: 'Message',
         component: Message,
     },
 
     //报价路由
     {
-        path: '/fa/quote',
+        path: '/quote',
         name: 'Quote',
         component: Quote,
     },
 
     //好友路由
     {
-        path: '/fa/friend',
+        path: '/friend',
         name: 'Friend',
         component: Friend,
     },
 
     //建议路由
     {
-        path: '/fa/suggestion',
+        path: '/suggestion',
         name: 'Suggestion',
         component: Suggestion,
     }
 ];
 
 const router = createRouter({
-  history: createWebHistory(process.env.BASE_URL),
-  routes
+   history: createWebHistory(process.env.BASE_URL),
+   // history: createWebHistory(),
+   routes
 });
 
 export default router

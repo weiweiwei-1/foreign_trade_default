@@ -7,3 +7,11 @@ export function getHomeProductList(params) {
         params
     })
 }
+
+export function getProductListFromSearchContent(params) {
+    return request({
+        url: 'fa/product/list/condition',
+        method: 'get',
+        params
+    })
+}
