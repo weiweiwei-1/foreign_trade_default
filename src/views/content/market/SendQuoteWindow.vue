@@ -221,6 +221,9 @@ export default {
               context.emit('closeWindow')
               context.emit('deleteProduct', props.deleteId)
               break
+            case -2:
+              messageShow('info', res.msg, 1000)
+              break
             default:
           }
         })
