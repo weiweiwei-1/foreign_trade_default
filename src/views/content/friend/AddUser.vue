@@ -76,20 +76,6 @@ export default {
       target.style.border = "1px solid deepskyblue"
     }
 
-    function msgShow(msgType, msgContent, duration) {
-      switch (msgType) {
-        case 'error':
-          messageShow(msgType, msgContent, duration)
-          break
-        case 'info':
-          messageShow(msgType, msgContent, duration)
-          break
-        case 'success':
-          messageShow(msgType, msgContent, duration)
-          break
-      }
-    }
-
     const sendApply = (ftsId) => {
       const inputTarget = document.querySelector('.input-text')
       if (sendMark.value.trim().length === 0 || sendMark.value.trim().length > 10) {
@@ -103,26 +89,26 @@ export default {
         sendFriendApply(applyInfo).then(res => {
           switch (res.code) {
             case -3:
-              msgShow('error', res.msg, 1000)
+              messageShow('error', res.msg, 1000)
               context.emit('closeWindow', props.targetIndex)
               break
             case -2:
-              msgShow('info', res.msg, 1000)
+              messageShow('info', res.msg, 1000)
               context.emit('closeWindow', props.targetIndex)
               break
             case -1:
-              msgShow('error', res.msg, 1000)
+              messageShow('error', res.msg, 1000)
               break
             case 0:
-              msgShow('success', res.msg, 1000)
+              messageShow('success', res.msg, 1000)
               context.emit('closeWindow', props.targetIndex)
               break
             case 1:
-              msgShow('success', res.msg, 1000)
+              messageShow('success', res.msg, 1000)
               context.emit('closeWindow', props.targetIndex)
               break
             case 2:
-              msgShow('success', res.msg, 1000)
+              messageShow('success', res.msg, 1000)
               context.emit('closeWindow', props.targetIndex)
           }
         })

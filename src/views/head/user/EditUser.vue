@@ -69,10 +69,10 @@
 </template>
 
 <script>
-import {reactive, toRefs, ref, getCurrentInstance} from 'vue'
+import {reactive, toRefs, ref, getCurrentInstance, onUnmounted} from 'vue'
 import {editUser, getUserInfo, logout, resumeUnLogin} from "network/user-fa"
 import UpdatePwd from 'views/head/user/UpdatePwd.vue'
-import store from 'store/'
+import store from '@/store'
 import {messageShow} from "@/config/common"
 
 export default {
@@ -275,6 +275,7 @@ export default {
             getUserInfo().then(res => {
               //后台请求最新用户数据，更新到页面上
               newUser = toRefs(res.data)
+              store.commit('changeName', res.data.name)
               imageUrl = "http://localhost:8080/fa-image/" + res.data.photo
             })
             break
@@ -328,6 +329,17 @@ export default {
     const closePwdWin = () => {
       updatePwdShow.value = false
     }
+
+    const removeListener = () => {
+      window.removeEventListener('msgList', function () {
+      })
+      window.removeEventListener('msgDetail', function () {
+      })
+    }
+
+    onUnmounted(() => {
+      removeListener()
+    })
 
     return {
       closeUserWindow,

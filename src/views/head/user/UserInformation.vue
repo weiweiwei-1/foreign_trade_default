@@ -1,6 +1,6 @@
 <template>
   <div id="user">
-    <a href="http://www.kingvi.online/fts" target="_blank">外贸询价？点击此处</a>
+    <a href="http://www.kingvi.online/fts" target="_blank">海外货物运费询价或查找优惠信息？点击此处</a>
     <div id="auth-user" v-if="showUser()" @click="showUserDetail">
       {{ $store.state.userName }}
     </div>
@@ -21,7 +21,7 @@
 
 <script>
 import LoginRegister from 'views/head/user/LoginRegister.vue'
-import {ref, onMounted, watch, getCurrentInstance, onUnmounted} from 'vue'
+import {ref, onMounted, watch, getCurrentInstance, onUnmounted, onBeforeUnmount} from 'vue'
 import store from "@/store"
 import {getLoginStatus, getUserInfo} from "network/user-fa"
 import {getQuoteCount} from "@/network/quote"
@@ -47,6 +47,7 @@ export default {
     const quoteCount = ref(-2)
     const {proxy} = getCurrentInstance()
 
+
     const userEvent = new CustomEvent('user', {
       detail: {
         data: null
@@ -66,8 +67,9 @@ export default {
     })
 
     function messageHandler(data) {
-      let JSONbigString = require('json-bigint')({"storeAsString": true})
-      let obj = JSONbigString.parse(data.detail.data)
+      let JSONBigString = require('json-bigint')({"storeAsString": true})
+      let obj = JSONBigString.parse(data.detail.data)
+      console.log('收到消息')
       switch (obj.messageType) {
         case 'sendMessage':
           if (store.state.msgListComStatus === false && store.state.msgDetailComStatus === false) {
@@ -89,7 +91,7 @@ export default {
           break
         case 'expiration':
           resetLoginStatus()
-          var status = confirm('登录失效，点击确定重新登录')
+          let status = confirm('登录失效，点击确定重新登录')
           if (status === true) {
             showType.value = 'login'
             showLoginStatus.value = true
@@ -110,9 +112,7 @@ export default {
           messageShow('error', '后台错误，联系管理员', 1000)
         } else {
           quoteCount.value = res
-          if (res !== -2) {
-            store.commit('changeQuoteCount', res)
-          }
+          store.commit('changeQuoteCount', res)
         }
       })
       window.addEventListener('user', messageHandler)
@@ -127,12 +127,6 @@ export default {
     // 心跳超时时间5s
     let heartBeatTimeout = 5000
 
-    // 重连锁标志
-    let lockReconnect = false
-
-    // 重连定时器
-    let reconnectTimer
-
     const WebSocketProxy = new Proxy(WebSocket, {
       construct: function (target, arg) {
         try {
@@ -142,6 +136,12 @@ export default {
       }
     })
 
+    // 重连锁标志
+    let lockReconnect = false
+
+    // 重连定时器
+    let reconnectTimer
+
     const createSocket = () => {
       if (store.state.maxReconnectTimes <= 0) {
         store.commit('changeConnectStatus', -1)
@@ -149,6 +149,7 @@ export default {
       }
       try {
         store.commit('setWebSocket', new WebSocketProxy(proxy.$wsUrl))
+        console.log('websocket的连接为：' + proxy.$wsUrl)
         store.commit('changeMaxReconnectTimes', store.state.maxReconnectTimes -= 1)
         if (store.state.maxReconnectTimes === 0) {
           store.commit('changeReconnectCircleMark', false)
@@ -214,6 +215,7 @@ export default {
 
     const init = () => {
       store.state.websocket.onopen = function (event) {
+        lockReconnect = true
         store.commit('changeConnectStatus', 1)
         store.commit('changeMaxReconnectTimes', store.state.defaultReconnectTimes)
         store.commit('changeReconnectCircleMark', true)
@@ -223,6 +225,7 @@ export default {
 
       //接收到消息的回调方法
       store.state.websocket.onmessage = function (event) {
+        lockReconnect = true
         heartCheck.reset().start()
         store.commit('changeConnectStatus', 1)
         userEvent.detail.data = event.data
@@ -235,6 +238,7 @@ export default {
 
       //连接发生错误的回调方法
       store.state.websocket.onerror = function (event) {
+        lockReconnect = false
         store.commit('changeConnectStatus', 0)
         heartCheck.reset()
         reconnect()
@@ -242,6 +246,7 @@ export default {
 
       //连接关闭的回调方法
       store.state.websocket.onclose = function (event) {
+        lockReconnect = false
         store.commit('changeConnectStatus', 0)
         heartCheck.reset()//心跳检测
         reconnect()
@@ -253,7 +258,6 @@ export default {
       }
     }
 
-    // createSocket()
     reconnect()
 
     //点击切换到登录页面
@@ -345,13 +349,21 @@ export default {
         }
     )
 
-    onUnmounted(() => {
+    const removeListener = () => {
       window.removeEventListener('user', function () {
       })
       window.removeEventListener('msgList', function () {
       })
       window.removeEventListener('msgDetail', function () {
       })
+    }
+
+    onBeforeUnmount(() => {
+      removeListener()
+    })
+
+    onUnmounted(() => {
+      removeListener()
     })
 
     return {

@@ -111,7 +111,6 @@ export default {
     }
 
     const deleteFriend = (data) => {
-      console.log('删除好友触发')
       let ftsId = data.detail.data.ftsId
       for (let i = 0; i < friendList.value.length; i++) {
         if (friendList.value[i].id === ftsId) {
@@ -382,7 +381,6 @@ button {
   border: none;
   cursor: pointer;
   line-height: 18px;
-  /*font-size: 4px;*/
 }
 
 .permit {

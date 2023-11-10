@@ -9,9 +9,9 @@
         <span id="fts-info-show" @click="ftsInfoShow">...</span>
       </div>
       <div id="chat-content">
-        <chat-detail :ftsId="ftsId" @closeMsgShow="closeMsgShow"></chat-detail>
         <quote-product-list :listShowStatus="listShowStatus" @closeQuoteShow="closeQuoteShow" ref="childDom"
                             :ftsId="ftsId"></quote-product-list>
+        <chat-detail :ftsId="ftsId"></chat-detail>
         <fts-info :ftsInfoShowStatus="ftsInfoShowStatus" @closeFtsInfoShow="closeFtsInfoShow" ref="ftsInfoChild"
                   :ftsId="ftsId"></fts-info>
       </div>
@@ -56,10 +56,6 @@ export default {
 
     const closeQuoteShow = () => {
       listShowStatus.value = false
-    }
-
-    const closeMsgShow = () => {
-      messageContentShow.value = false
     }
 
     const ftsInfoShow = () => {
@@ -107,7 +103,6 @@ export default {
       closeQuoteShow,
       childDom,
       ftsInfoChild,
-      closeMsgShow
     }
   }
 }

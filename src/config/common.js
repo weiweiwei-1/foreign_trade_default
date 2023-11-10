@@ -66,3 +66,4 @@ export function resetLoginStatus() {
     store.commit('changeTotalUnReadMsgCount', 0)
     store.commit('changeQuoteCount', -2)
 }
+

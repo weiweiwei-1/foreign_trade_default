@@ -34,7 +34,7 @@ import {login} from "network/user-fa"
 import {getUnReadMsgCount} from 'network/message'
 import {getNewFriendCount} from 'network/friend'
 import {getQuoteCount} from 'network/quote'
-import store from 'store/'
+import store from '@/store'
 import {messageShow} from "@/config/common"
 
 export default {
@@ -112,7 +112,6 @@ export default {
               store.commit('changeName', res.data.name)
               // 改变重连标志位为true，userinfo组件会监听到标志位变化为true，断连状态，且重连次数已恢复默认次数，执行重连操作
               store.commit('changeMaxReconnectTimes', store.state.defaultReconnectTimes)
-              store.commit('changeReconnectCircleMark', true)
               getUnReadMsgCount().then(res => {
                 switch (res) {
                   case -1:
@@ -139,8 +138,11 @@ export default {
                   store.commit('changeQuoteCount', res)
                 }
               })
-              messageShow('success', '登录成功!', 1000)
+              messageShow('success', '登录成功!', 2000)
               context.emit('closeWindowLink')
+              setTimeout(function () {
+                store.commit('changeReconnectCircleMark', true)
+              }, 1000)
               break
             case 0:
               res.error.emailError === null ? emailValid() : emailInvalid(res.error.emailError)

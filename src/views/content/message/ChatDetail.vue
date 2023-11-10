@@ -107,13 +107,15 @@ export default {
     }
 
     function messageHandler(data) {
-      let JSONbigString = require('json-bigint')({"storeAsString": true})
-      let obj = JSONbigString.parse(data.detail.data)
+      let JSONBigString = require('json-bigint')({"storeAsString": true})
+      let obj = JSONBigString.parse(data.detail.data)
       switch (obj.messageType) {
         case 'sendMessage':
           // 若当前窗口的ftsId和消息的senderId匹配，则将新消息直接添加到已有的messageList尾部，同时触发读消息
           if (ftsId.value === obj.senderId) {
-            messageList.value.push(obj)
+            nextTick(() => {
+              messageList.value.push(obj)
+            })
             const senderIdParam = {
               senderId: ftsId.value
             }
@@ -128,6 +130,7 @@ export default {
             }
           }
           break
+        // 收到对方已读信息，将窗口的消息变为已读
         case 'readMessage':
           const receiverId = obj.receiverId
           if (ftsId.value === receiverId) {
@@ -140,7 +143,8 @@ export default {
             "receiverId": ftsId.value,
             "content": msgContent.value,
             "messageType": "sendMessage",
-            "sendTime": sendDate.value
+            "sendTime": sendDate.value,
+            "status": '0'
           }
           messageList.value.push(message)
           msgContent.value = ''
@@ -174,11 +178,9 @@ export default {
       ftsMsgInfo.value.name = data.detail.data.remark
     }
 
-    const delFriend = (data) => {
-      let ftsId = data.detail.ftsId
-      if (ftsMsgInfo.value.id === ftsId) {
-        context.emit('closeMsgShow')
-      }
+    const addListener = () => {
+      window.addEventListener('msgDetail', messageHandler)
+      window.addEventListener('remarkUpdate', updateRemark)
     }
 
     onMounted(() => {
@@ -195,27 +197,23 @@ export default {
             break
         }
       })
-      window.addEventListener('msgDetail', messageHandler)
-      window.addEventListener('remarkUpdate', updateRemark)
-      window.addEventListener('delFriend', delFriend)
+      addListener()
     })
 
-    onBeforeUnmount(() => {
-      store.commit('changeMsgDetailComStatus', false)
+    const removeListener = () => {
       window.removeEventListener('msgDetail', messageHandler)
       window.removeEventListener('remarkUpdate', function () {
       })
-      window.removeEventListener('delFriend', function () {
-      })
+    }
+
+    onBeforeUnmount(() => {
+      store.commit('changeMsgDetailComStatus', false)
+      removeListener()
     })
 
     onUnmounted(() => {
       store.commit('changeMsgDetailComStatus', false)
-      window.removeEventListener('msgDetail', messageHandler)
-      window.removeEventListener('remarkUpdate', function () {
-      })
-      window.removeEventListener('delFriend', function () {
-      })
+      removeListener()
     })
 
     Date.prototype.Format = function (fmt) {
@@ -240,8 +238,12 @@ export default {
     }
 
     function setReadStatus(messageList) {
-      for (let item = 0; item < messageList.value.length; item++) {
-        messageList.value[item].status = '1'
+      for (let item = messageList.value.length - 1; item >= 0; item--) {
+        if (messageList.value[item].status === '0' && messageList.value[item].receiverId === props.ftsId) {
+          messageList.value[item].status = '1'
+        } else {
+          break
+        }
       }
     }
 
@@ -328,9 +330,11 @@ export default {
               senderId: val
             }
             getFtsMessageInfoBySenderId(param).then(res => {
-              if (res.data !== undefined) {
-                ftsMsgInfo.value = res.data
-                messageChange()
+              if (res.data !== undefined && res.data !== null) {
+                nextTick(() => {
+                  ftsMsgInfo.value = res.data
+                  messageChange()
+                })
               }
             })
           }

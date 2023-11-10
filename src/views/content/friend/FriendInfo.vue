@@ -37,8 +37,8 @@
       </div>
     </div>
   </div>
-  <add-friend v-if="addFriendShowStatus" @closeAddFriendWindow="closeAddFriendWindow"
-              :ftsId="ftsId"></add-friend>
+  <add-friend :addFriendShowStatus="addFriendShowStatus" @closeAddFriendWindow="closeAddFriendWindow"
+              :ftsId="ftsId" @setFriendStatus="setFriendStatus"></add-friend>
 </template>
 
 <script>
@@ -55,11 +55,6 @@ export default {
   props: {
     ftsId: {
       type: String,
-      required: false,
-      default: null
-    },
-    targetIndex: {
-      type: Number,
       required: false,
       default: null
     },
@@ -81,6 +76,7 @@ export default {
     const editText = ref('修改备注')
     const readStatus = ref(false)
     const disable = ref(false)
+    // ftsId改变标志
     const changeMark = ref(true)
     const addFriendShowStatus = ref(false)
 
@@ -123,6 +119,10 @@ export default {
       }
     }
 
+    const setFriendStatus = (status) => {
+        context.emit('setFriendStatus', status)
+    }
+
     // 加载好友信息
     const loadFriendInfo = () => {
       if (changeMark.value === true) {
@@ -146,28 +146,33 @@ export default {
       }
     }
 
-    // 初始化一个备注修改监听器
+    // 初始化一个修改备注监听器
     const remarkEvent = new CustomEvent('remarkUpdate', {
       detail: {
         data: null
       }
     })
 
-    // 删除好友监听事件
+    // 初始化一个删除好友监听器
     const delFriendEvent = new CustomEvent('delFriend', {
       detail: {
         data: null
       }
     })
 
+    // 组件销毁移除监听器
     onBeforeUnmount(() => {
-      window.removeEventListener('remarkUpdate', function () {})
-      window.removeEventListener('delFriend', function () {})
+      window.removeEventListener('remarkUpdate', function () {
+      })
+      window.removeEventListener('delFriend', function () {
+      })
     })
 
     onUnmounted(() => {
-      window.removeEventListener('remarkUpdate', function () {})
-      window.removeEventListener('delFriend', function () {})
+      window.removeEventListener('remarkUpdate', function () {
+      })
+      window.removeEventListener('delFriend', function () {
+      })
     })
 
     // 保存好友备注修改
@@ -193,9 +198,20 @@ export default {
               break
             case -1:
               messageShow('error', res.msg, 1000)
+              break
+            case 0:
+              messageShow('info', res.msg, 1000)
+              remark.value = ftsInfo.value.reMark
+              editHide()
+              context.emit('setFriendStatus', 0)
           }
         })
       }
+    }
+
+    const delSuccess = (type, msg) => {
+      messageShow(type, msg, 1000)
+      context.emit('setFriendStatus', 0)
     }
 
     // 删除好友
@@ -208,8 +224,17 @@ export default {
         deleteFaFriend(params).then(res => {
           switch (res.code) {
             case 1:
-              context.emit("delTargetFriend")
-              context.emit('closeWindow', 'chat')
+              delSuccess('success', '成功删除')
+              delFriendEvent.detail.data = {
+                'ftsId': id
+              }
+              window.dispatchEvent(delFriendEvent)
+              break
+            case -1:
+              messageShow('error', res.msg, 1000)
+              break
+            case 0:
+              delSuccess('info', res.msg)
               delFriendEvent.detail.data = {
                 'ftsId': id
               }
@@ -255,7 +280,8 @@ export default {
       loadFriendInfo,
       addFriendShowStatus,
       showAddFriendBlock,
-      closeAddFriendWindow
+      closeAddFriendWindow,
+      setFriendStatus
     }
   }
 }
@@ -263,7 +289,6 @@ export default {
 
 <style scoped>
 #fa-friend-block {
-  /*position: fixed;*/
   position: absolute;
   z-index: 1009;
   display: -webkit-box;

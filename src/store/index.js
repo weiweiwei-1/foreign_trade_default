@@ -8,7 +8,13 @@ export default createStore({
         onlineStatus: false,
         totalUnReadMsgCount: 0,
         newFriendCount: 0,
+        // 剩余报价数
         quoteCount: -2,
+        // 环境中获取的baseUrl的头部地址
+        urlHeader: process.env.VUE_APP_API_URL,
+        // 环境中获取的websocketUrl地址
+        websocketUrl: process.env.VUE_APP_WEBSOCKET_URL,
+        // 全局websocket变量，统筹全局websocket消息的发送和处理逻辑
         websocket: null,
         // 连接状态，1为已连上，0为正在连接，-1为完全断开，不再重连
         connectStatus: -1,

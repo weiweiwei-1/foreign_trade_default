@@ -194,6 +194,7 @@ li {
 img {
   width: 80px;
   height: 80px;
+  margin-top: 8px;
 }
 
 .fts-name {

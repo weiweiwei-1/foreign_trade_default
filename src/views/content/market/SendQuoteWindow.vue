@@ -13,7 +13,7 @@
               <span v-else style="color: #333">非实单</span>
             </div>
             <div class="item-charge-status">
-              <span v-if="curProductInfo.charger === '是'">带电</span>
+              <span v-if="curProductInfo.charger === '1'">带电</span>
               <span v-else style="color: rgb(224, 46, 36)">不带电</span>
             </div>
           </div>
@@ -82,7 +82,7 @@
               </ul>
             </div>
             <div id="send-quote">
-              <button @click="send">发送报价</button>
+              <button @click="sendQuoteTrigger">发送报价</button>
             </div>
           </div>
         </div>
@@ -162,7 +162,7 @@ export default {
       target.style.border = "1px solid deepskyblue"
     }
 
-    const send = () => {
+    const sendQuoteTrigger = () => {
       //错误标志位
       let error = 0
       //获取select选择对象，0,1,2分别为运输shippingWay，arrangeTime，deliverTime
@@ -245,7 +245,7 @@ export default {
       closeImageWindow,
       closeQuoteWindow,
       inputChange,
-      send
+      sendQuoteTrigger
     }
   }
 

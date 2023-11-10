@@ -24,16 +24,15 @@
         </div>
       </div>
     </transition>
-    <add-friend v-if="addFriendShowStatus" @closeAddFriendWindow="closeAddFriendWindow"
-                :ftsId="ftsInfo.id + ''"></add-friend>
+    <add-friend :addFriendShowStatus="addFriendShowStatus" @closeAddFriendWindow="closeAddFriendWindow"
+                :ftsId="ftsInfo.id" @setFriendStatus="setFriendStatus"></add-friend>
     <friend-info :showStatus="showStatus" :friendStatus="friendStatus"
-                 @closeFriendInfo="closeFriendInfo" :ftsId="ftsId + ''" ref="friendInfoChild"></friend-info>
+                 @closeFriendInfo="closeFriendInfo" :ftsId="ftsId" ref="friendInfoChild" @setFriendStatus="setFriendStatus"></friend-info>
   </div>
 </template>
 
 <script>
 import AddFriend from 'views/content/quote/AddFriend.vue'
-import AddUser from 'views/content/friend/AddUser.vue'
 import FriendInfo from "views/content/friend/FriendInfo.vue"
 import {nextTick, ref, watch, onMounted} from 'vue'
 import {getFtsInfoByFtsId} from "network/user-fts"
@@ -44,7 +43,6 @@ export default {
   name: "FtsInfo",
   components: {
     AddFriend,
-    AddUser,
     FriendInfo
   },
   props: {
@@ -58,6 +56,7 @@ export default {
       required: false,
       default: null
     }
+
   },
   setup(props, context) {
     const ftsInfo = ref(Object)
@@ -115,6 +114,10 @@ export default {
       showStatus.value = false
     }
 
+    const setFriendStatus = (status) => {
+      friendStatus.value = status
+    }
+
     document.addEventListener("click", e => {
       const btnTarget = document.querySelector('#fts-info-show');
       const insideTarget = document.querySelector('#fts-info');
@@ -147,7 +150,8 @@ export default {
       showStatus,
       closeFriendInfo,
       showFriendInfo,
-      friendInfoChild
+      friendInfoChild,
+      setFriendStatus
     }
   }
 }

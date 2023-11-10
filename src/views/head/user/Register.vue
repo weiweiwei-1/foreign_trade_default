@@ -241,6 +241,7 @@ export default {
               store.commit('changeCode', res.data.code)
               store.commit('changeRole', res.data.role)
               store.commit('changeName', res.data.name)
+              store.commit('changeQuoteCount', 30)
               context.emit('closeWindowLink')
               break
             case 0:

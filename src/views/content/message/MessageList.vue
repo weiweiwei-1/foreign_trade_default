@@ -100,14 +100,9 @@ export default {
       }
     }
 
-    const deleteFriend = (data) => {
-      let ftsId = data.detail.data.ftsId
-      for (let i = 0; i < messageList.value.length; i++) {
-        if (messageList.value[i].friendId === ftsId) {
-          messageList.value.splice(i, 1)
-          break
-        }
-      }
+    const addListener = () => {
+      window.addEventListener('msgList', messageHandler)
+      window.addEventListener('remarkUpdate', updateRemark)
     }
 
     onMounted(() => {
@@ -115,8 +110,6 @@ export default {
         switch (res.code) {
           case 1:
             store.commit('changeMsgListComStatus', true)
-            store.commit('changeUserConStatus', false)
-            store.commit('changeMsgListConStatus', true)
             nextTick(() => {
               messageList.value = res.data
               let unReadCount = 0
@@ -132,9 +125,7 @@ export default {
             messageShow('error', res.msg, 1000)
         }
       })
-      window.addEventListener('msgList', messageHandler)
-      window.addEventListener('remarkUpdate', updateRemark)
-      window.addEventListener('delFriend', deleteFriend)
+      addListener()
     })
 
     function addFriendMsgChange(obj) {
@@ -188,18 +179,21 @@ export default {
       }
     }
 
-    onBeforeUnmount(() => {
-      store.commit('changeMsgListComStatus', false)
+    const removeListener = () => {
       window.removeEventListener('msgList', messageHandler)
       window.removeEventListener('remarkUpdate', function () {
       })
+    }
+
+
+    onBeforeUnmount(() => {
+      store.commit('changeMsgListComStatus', false)
+      removeListener()
     })
 
     onUnmounted(() => {
       store.commit('changeMsgListComStatus', false)
-      window.removeEventListener('msgList', messageHandler)
-      window.removeEventListener('remarkUpdate', function () {
-      })
+      removeListener()
     })
 
     const changeId = (ftsId) => {

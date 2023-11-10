@@ -1,10 +1,10 @@
 <template>
   <div>
     <transition>
-      <div id="quote-product-list" v-show="listShow()">
-        报价信息
+      <div id="quote-product-list" v-show="listShowStatus">
+        相关报价
         <div class="list-item" v-if="quoteProductList.length === 0">
-          暂无报价信息
+          暂无关联报价
         </div>
         <div class="list-item" v-else v-for="item in quoteProductList">
           <div class="img-block">
@@ -61,9 +61,7 @@ export default {
   setup(props, context) {
     const quoteProductList = ref([])
     const changeMark = ref(true)
-    const listShow = () => {
-      return props.listShowStatus
-    }
+
     onMounted(() => {
       document.addEventListener("click", e => {
         const btnTarget = document.querySelector('#quote-show')
@@ -72,17 +70,8 @@ export default {
           context.emit('closeQuoteShow')
         }
       })
-      const param = {
-        'ftsId': props.ftsId,
-      }
-      getQuoteListByFtsId(param).then(res => {
-        if (res.code === 1) {
-          quoteProductList.value = res.data
-        } else {
-          messageShow('error', res.msg, 1000)
-        }
-      })
     })
+
     const showQuoteList = () => {
       // 若changeMark为true，则从后台获取数据
       if (changeMark.value === true) {
@@ -116,7 +105,6 @@ export default {
 
     return {
       quoteProductList,
-      listShow,
       showQuoteList
     }
   }

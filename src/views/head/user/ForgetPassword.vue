@@ -1,6 +1,6 @@
 <template>
   <div id="forget-password-content">
-    未开发完，联系管理员获取~
+    待开发
   </div>
 </template>
 

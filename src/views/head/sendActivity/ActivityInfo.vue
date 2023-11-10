@@ -30,7 +30,7 @@
 </template>
 
 <script>
-import {ref, toRefs, onMounted, reactive, getCurrentInstance} from 'vue'
+import {ref, toRefs, onMounted, reactive, getCurrentInstance, nextTick} from 'vue'
 import {getActivityInfo, sendActivityInfo} from "network/recommend"
 import {messageShow} from "@/config/common"
 
@@ -68,8 +68,10 @@ export default {
             } else {
               imageHeader.value = proxy.$recommendImageUrl
             }
-            originImageUrl.value = imageHeader.value + activityInfo.value.activityPhoto
-            image.value = originImageUrl.value
+            nextTick(() => {
+              originImageUrl.value = imageHeader.value + activityInfo.value.activityPhoto
+              image.value = originImageUrl.value
+            })
           }
         }
       })
@@ -187,14 +189,19 @@ export default {
       const descriptionTarget = document.querySelector('#description')
       // 若一开始的图片为空，且未加载图片文件，则标红提示
       if (activityInfo.value.activityPhoto === null) {
+        console.log('活动图为：' + activityInfo.value.activityPhoto)
         if (fileTarget.files.length === 0) {
           textInvalid(imageTarget)
+          console.log('空了')
           fileErr.value = true
         }
       }
       fileJudge(fileTarget, imageTarget, fileErr)
       lengthJudge(keyWordTarget, editActivityInfo.keyWords, keyWordErr, 2, 15, 0)
       lengthJudge(descriptionTarget, editActivityInfo.description, descriptionErr, 2, 100, 0)
+      console.log(fileErr.value)
+      console.log(keyWordErr.value)
+      console.log(descriptionErr.value)
       if (!fileErr.value && !keyWordErr.value && !descriptionErr.value) {
         const formData = new FormData
         formData.append('photo', file)

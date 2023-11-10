@@ -24,8 +24,6 @@
       </div>
     </div>
   </div>
-
-
 </template>
 
 <script>
@@ -140,7 +138,7 @@ img {
   display: flex;
   flex-direction: row;
   width: 100%;
-  height: 17px;
+  height: 15px;
   text-align: left;
   /*font: 12px/17px arial, sans-serif;*/
   font: 12px normal iconfont;

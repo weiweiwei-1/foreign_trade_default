@@ -44,11 +44,10 @@
               </div>
             </div>
             <div class="item-quote">
-              <button class="quote">报价</button>
+              <button class="quote">运费报价</button>
             </div>
           </a>
         </li>
-
       </ul>
     </div>
   </div>
@@ -71,7 +70,7 @@
             <b>{{ maxPage }}</b>
               页&nbsp;&nbsp;到第
             </em>
-            <input type="number" min="1" class="input-text" v-model="jumpPage"
+            <input type="number" min="1" :max="maxPage" class="input-text" v-model="jumpPage"
                    onkeyup="value=value.replace(/^(0+)|[^\d]+/g,'')">
             <em>页</em>
             <a class="btn btn-default" @click="jump">确定</a>
@@ -96,7 +95,7 @@ export default {
 
   setup() {
     // 根据index删除的productInfo
-    const deleteId = ref(Object)
+    const deleteId = ref(null)
     // 商品列表
     const productList = ref([])
     // 窗口开启关闭状态
@@ -115,6 +114,7 @@ export default {
     const maxPage = ref(1)
     // 跳转页数
     const jumpPage = ref(1)
+    // 页面数列表
     const pageList = ref([])
     // 产品信息
     const productInfo = reactive({
@@ -190,6 +190,10 @@ export default {
                 }
                 leftPage.value = pageList.value[0]
                 rightPage.value = pageList.value[maxPage.value - 1]
+              } else {
+                pageList.value = [1, 2, 3, 4, 5, 6, 7]
+                leftPage.value = 1
+                rightPage.value = 7
               }
             }
             break
@@ -232,20 +236,31 @@ export default {
       productList.value.splice(index, 1)
     }
 
-    const resetHomePageList = (changeMaxPage) => {
-      pageList.value = []
-      for (let i = 0; i < changeMaxPage; i++) {
-        pageList.value.push(i + 1)
+    // 页面左移num格
+    const leftMove = (num) => {
+      for (let i = 0; i < pageList.value.length; i++) {
+        pageList.value[i] -= num
       }
-      leftPage.value = pageList.value[0]
-      rightPage.value = pageList.value[changeMaxPage - 1]
-      maxPage.value = changeMaxPage
     }
 
+    // 页面右移num格
+    const rightMove = (num) => {
+      for (let i = 0; i < pageList.value.length; i++) {
+        pageList.value[i] += num
+      }
+    }
 
-    const searchResult = (pageNum, saveSearchContent) => {
+    // 重置当前页，左页面，右页面
+    const resetCurPage = (aimPage) => {
+      curPage.value = aimPage
+      jumpPage.value = aimPage
+      leftPage.value = pageList.value[0]
+      rightPage.value = pageList.value[pageList.value.length - 1]
+    }
+
+    const searchResult = (aimPage, saveSearchContent) => {
       const searchParam = {
-        'curPage': pageNum,
+        'curPage': aimPage,
         'searchContent': saveSearchContent
       }
       getProductListFromSearchContent(searchParam).then(res => {
@@ -257,11 +272,28 @@ export default {
                 return
               }
               productList.value = res.data.beanList
-              if (pageNum === 1) {
-                resetHomePageList(res.data.pageCount)
+              maxPage.value = res.data.pageCount
+              if (rightPage.value < 7 && maxPage.value >= 7) {
+                leftPage.value = 1
+                rightPage.value = 7
+                pageList.value = [1, 2, 3, 4, 5, 6, 7]
+              } else if (maxPage.value < 7) {
+                pageList.value = []
+                for (let i = 0; i < maxPage.value; i++) {
+                  pageList.value.push(i + 1)
+                }
+                leftPage.value = 1
+                rightPage.value = pageList.value[pageList.value.length - 1]
               }
-              curPage.value = pageNum
-              jumpPage.value = pageNum
+              let differ = 0
+              if (aimPage < leftPage.value && aimPage >= 1) {
+                differ = leftPage.value - aimPage
+                leftMove(differ)
+              } else if (aimPage > rightPage.value && aimPage <= maxPage.value) {
+                differ = aimPage - rightPage.value
+                rightMove(differ)
+              }
+              resetCurPage(aimPage)
               return 1
             }
             return 0
@@ -272,73 +304,39 @@ export default {
             messageShow('error', res.msg, 1000)
             return -1
         }
-      }).catch(err => {
-        // messageShow('error', res.msg, 1000)
-        return -1
       })
       return 1
     }
 
-    const changePageNum = (pageNum) => {
-      searchResult(pageNum, saveSearchContent.value.trim())
+    const changePageNum = (aimPage) => {
+      searchResult(aimPage, saveSearchContent.value.trim())
     }
 
     const showActive = (id) => {
       return curPage.value === id
     }
 
+    // 点击上一页按钮
     const lastPage = () => {
-      if (curPage.value > leftPage.value) {
-        searchResult(curPage.value -= 1, saveSearchContent.value.trim())
-      } else if (curPage.value > 1) {
-        if (searchResult(curPage.value -= 1, saveSearchContent.value.trim()) === 1) {
-          for (let i = 0; i < pageList.value.length; i++) {
-            pageList.value[i]--
-            pageList.value[i]--
-          }
-          leftPage.value--
-          rightPage.value--
-        }
+      // 当前页大于最小页
+      if (curPage.value > 1) {
+        searchResult(curPage.value - 1, saveSearchContent.value.trim())
       }
     }
 
+    // 点击下一页按钮
     const nextPage = () => {
-      if (curPage.value < rightPage.value) {
-        searchResult(curPage.value += 1, saveSearchContent.value.trim())
-      } else if (curPage.value < maxPage.value) {
-        if (searchResult(curPage.value++, saveSearchContent.value.trim()) === 1) {
-          for (let i = 0; i < pageList.value.length; i++) {
-            pageList.value[i]++
-          }
-          leftPage.value++
-          rightPage.value++
-        }
+      // 当前页小于最大页
+      if (curPage.value < maxPage.value) {
+        searchResult(curPage.value + 1, saveSearchContent.value.trim())
       }
     }
 
     const jump = () => {
       if (jumpPage.value < 1 || jumpPage.value > maxPage.value) {
         messageShow('info', '请输入正确的页数', 1000)
-      } else if (pageList.value[0] <= jumpPage.value && jumpPage.value <= pageList.value[pageList.value.length - 1]) {
-        searchResult(jumpPage.value, saveSearchContent.value.trim())
-      } else if (jumpPage.value < leftPage.value && jumpPage.value >= 1) {
-        const diff = leftPage.value - jumpPage.value
-        if (searchResult(jumpPage.value, saveSearchContent.value.trim()) === 1) {
-          for (let i = 0; i < pageList.value.length; i++) {
-            pageList.value[i] -= diff
-          }
-          leftPage.value -= diff
-          rightPage.value -= diff
-        }
-      } else {
-        const diff = jumpPage.value - rightPage.value
-        if (searchResult(jumpPage.value, saveSearchContent.value.trim()) === 1) {
-          for (let i = 0; i < pageList.value.length; i++) {
-            pageList.value[i] += diff
-          }
-          leftPage.value += diff
-          rightPage.value += diff
-        }
+      } else if (jumpPage.value !== curPage.value) {
+        searchResult(jumpPage.value, saveSearchContent.value)
       }
     }
 
@@ -387,7 +385,7 @@ export default {
 
 .search-text {
   float: left;
-  width: 576px;
+  width: 543px;
   height: 35px;
   line-height: 24px;
   color: #999;

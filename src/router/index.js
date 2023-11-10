@@ -1,9 +1,9 @@
 import { createRouter, createWebHistory } from 'vue-router'
-const Market = () => import('views/content/market/Market.vue');
-const Message = () => import('views/content/message/Message.vue');
-const Quote = () => import('views/content/quote/Quote.vue');
-const Friend = () => import('views/content/friend/Friend.vue');
-const Suggestion = () => import('views/content/suggestions/Suggestion.vue');
+const Market = () => import('@/views/content/market/Market.vue');
+const Message = () => import('@/views/content/message/Message.vue');
+const Quote = () => import('@/views/content/quote/Quote.vue');
+const Friend = () => import('@/views/content/friend/Friend.vue');
+const Suggestion = () => import('@/views/content/suggestions/Suggestion.vue');
 const routes = [
     //主路由
     {

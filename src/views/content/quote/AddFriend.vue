@@ -1,5 +1,5 @@
 <template>
-  <div id="add-friend-content" @click="closeAddFriendWindow">
+  <div id="add-friend-content" @click="closeAddFriendWindow" v-if="addFriendShowStatus">
     <div id="add-friend-center">
       <div class="text">验证信息</div>
       <span class="text-area">我是：<input @input='markChange' v-model="senderName" class="text-input" type="text"></span>
@@ -12,6 +12,9 @@
 import {ref} from 'vue'
 import {sendFriendApply} from "network/friend"
 import {messageShow} from "@/config/common";
+import store from "@/store";
+import {delNewFriendCount} from "@/config/common";
+
 
 export default {
   name: "AddFriend",
@@ -21,9 +24,14 @@ export default {
       required: true,
       default: null
     },
+    addFriendShowStatus: {
+      type: Boolean,
+      required: true,
+      default: null
+    }
   },
   setup(props, context) {
-    const senderName = ref("")
+    const senderName = ref(store.state.userName)
     const closeAddFriendWindow = (e) => {
       const clickTarget = document.querySelector('#add-friend-center')
       if (clickTarget && !clickTarget.contains(e.target)) {
@@ -56,16 +64,31 @@ export default {
         };
         sendFriendApply(applyInfo).then(res => {
           switch (res.code) {
+            case -3:
+              messageShow('error', res.msg, 1000)
+              context.emit('closeAddFriendWindow')
+              break
+            case -2:
+              messageShow('info', res.msg, 1000)
+              context.emit('closeAddFriendWindow')
+              break
             case -1:
               messageShow('error', res.msg, 1000)
-              break;
+              break
             case 0:
-              messageShow('warning', res.msg, 1000)
-              break;
+              context.emit('setFriendStatus', 1)
+              messageShow('success', res.msg, 1000)
+              context.emit('closeAddFriendWindow')
+              break
             case 1:
-              context.emit('closeAddFriendWindow');
-              messageShow('success', "申请成功，等待好友通过", 1000)
-              break;
+              context.emit('setFriendStatus', 1)
+              messageShow('success', res.msg, 1000)
+              context.emit('closeAddFriendWindow')
+              delNewFriendCount()
+              break
+            case 2:
+              messageShow('success', res.msg, 1000)
+              context.emit('closeAddFriendWindow')
           }
         })
       }
@@ -83,7 +106,6 @@ export default {
 
 <style scoped>
 #add-friend-content {
-  /*position: fixed;*/
   position: absolute;
   z-index: 1013;
   display: flex;
